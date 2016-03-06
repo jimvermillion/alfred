@@ -11,6 +11,7 @@ mongoose.connect(db.url);
 // MajorA
 const majorA = require('major-a');
 const majorRouter = majorA.majorRouter;
+const majorAuth = majorA.majorAuth;
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -19,9 +20,12 @@ app.use((req, res, next) => {
   next();
 });
 
-
 // Auth Router
 app.use('/auth', majorRouter);
+
+// Dashboard Router
+const dashboardRouter = require(__dirname + '/routes/dashboard_router');
+app.use('/dashbaord', majorAuth(), dashboardRouter);
 
 // Listen
 app.listen(PORT, () => {
