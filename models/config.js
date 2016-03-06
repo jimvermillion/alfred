@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 var configSchema = new mongoose.Schema({
+  owner_id: String,
   location: {
     lat: String,
     long: String
