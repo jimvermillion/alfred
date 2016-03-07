@@ -25,6 +25,7 @@ module.exports = exports = function(io) {
       }, (err, data) => {
         if (err) return console.log('There was an erorr');
         // Load user config
+        data.user = req.user;
         io.to(user_id).emit('UPDATED_CONFIG', data);
       });
     });
@@ -113,6 +114,7 @@ module.exports = exports = function(io) {
         }
 
         // Emit event
+        updatedConfig.user = req.user;
         io.to(req.user._id).emit('UPDATED_CONFIG', updatedConfig);
 
         // Send response
