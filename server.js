@@ -14,9 +14,9 @@ const majorRouter = majorA.majorRouter;
 const majorAuth = majorA.majorAuth;
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type, authentication, authorization, token');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   next();
 });
 
@@ -25,7 +25,7 @@ app.use('/auth', majorRouter);
 
 // Dashboard Router
 const dashboardRouter = require(__dirname + '/routes/dashboard_router');
-app.use('/dashbaord', majorAuth(), dashboardRouter);
+app.use('/dashboard', dashboardRouter);
 
 // Listen
 app.listen(PORT, () => {
