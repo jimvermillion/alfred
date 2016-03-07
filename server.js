@@ -25,7 +25,7 @@ app.use('/auth', majorRouter);
 
 // Dashboard Router
 const dashboardRouter = require(__dirname + '/routes/dashboard_router');
-app.use('/dashbaord', majorAuth(), dashboardRouter);
+app.use('/dashboard', majorAuth(), dashboardRouter);
 
 // Listen
 app.listen(PORT, () => {
