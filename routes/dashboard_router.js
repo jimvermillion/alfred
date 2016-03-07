@@ -42,3 +42,25 @@ dashboardRouter.get('/preferences', mAuth(), (req, res) => {
     }
   });
 });
+
+dashboardRouter.put('/preferences', (req, res) => {
+  // Update Prefenece Config
+  var updatedConfig = req.body;
+  delete updatedConfig._id;
+  Config.update({_id. req.params.id}, updatedConfig, (err) => {
+    if (err) return console.log(err);
+    res.status(200).json(updatedConfig);
+  })
+});
+
+dashboardRouter.delete('/preferences', (req, res) => {
+  // Delete Prefenece Config
+  Config.remove({ _id: req.config.id }, (err, data) => {
+    if (err) return console.log(err);
+    if (!data) {
+      var data = new Config;
+      data.owner_id = req.user.id;
+      res.status(200).json({msg: 'successfully deleted config'});
+    }
+  });
+});
