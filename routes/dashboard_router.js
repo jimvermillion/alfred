@@ -23,7 +23,7 @@ dashboardRouter.post('/preferences', mAuth(), jsonParser, (req, res) => {
     config.owner_id = req.user._id;
     config.location = req.body.location;
     config.modules = req.body.modules || [];
-  } catch(e) {
+  } catch (e) {
     return res.status(500).json({
       msg: 'There was an item missing'
     });
@@ -31,7 +31,7 @@ dashboardRouter.post('/preferences', mAuth(), jsonParser, (req, res) => {
   // Save document into DB
   config.save((err, savedData) => {
     // Check error
-    if(err) {
+    if (err) {
       return res.status(500).json({
         msg: 'There was an error saving'
       });
@@ -75,17 +75,26 @@ dashboardRouter.get('/preferences', mAuth(), (req, res) => {
   });
 });
 
-dashboardRouter.put('/preferences/:id', (req, res) => {
-  // Update Prefenece Config
-  var updatedConfig = req.body;
-  delete updatedConfig._id;
-  Config.update({
-    _id: req.params.id
-  }, updatedConfig, (err) => {
-    if (err) return console.log(err);
-    res.status(200).json(updatedConfig);
-  })
-});
+dashboardRouter
+  .put('/preferences/:id', mAuth(), jsonParser, (req, res) => {
+    // Update Prefenece Config
+    var updatedConfig = req.body;
+    // Remove Id as to not confuse mongo
+    delete updatedConfig._id;
+    // Update config doc
+    Config.update({
+      _id: req.params.id
+    }, updatedConfig, (updateErr, updateData) => {
+      // Check error
+      if (updateErr) {
+        return res.status(500).json({
+          msg: 'There was an error'
+        });
+      }
+      // Send response
+      res.status(200).json(updateData);
+    })
+  });
 
 dashboardRouter.delete('/preferences/:id', (req, res) => {
   // Delete Prefenece Config
