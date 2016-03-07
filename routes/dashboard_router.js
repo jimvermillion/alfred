@@ -47,7 +47,7 @@ dashboardRouter.put('/preferences', (req, res) => {
   // Update Prefenece Config
   var updatedConfig = req.body;
   delete updatedConfig._id;
-  Config.update({_id. req.params.id}, updatedConfig, (err) => {
+  Config.update({_id: req.params.id}, updatedConfig, (err) => {
     if (err) return console.log(err);
     res.status(200).json(updatedConfig);
   })
