@@ -43,7 +43,7 @@ dashboardRouter.get('/preferences', mAuth(), (req, res) => {
   });
 });
 
-dashboardRouter.put('/preferences', (req, res) => {
+dashboardRouter.put('/preferences/:id', (req, res) => {
   // Update Prefenece Config
   var updatedConfig = req.body;
   delete updatedConfig._id;
@@ -53,7 +53,7 @@ dashboardRouter.put('/preferences', (req, res) => {
   })
 });
 
-dashboardRouter.delete('/preferences', (req, res) => {
+dashboardRouter.delete('/preferences/:id', (req, res) => {
   // Delete Prefenece Config
   Config.remove({ _id: req.config.id }, (err, data) => {
     if (err) return console.log(err);
