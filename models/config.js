@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 var configSchema = new mongoose.Schema({
+  name: {type: String, default: 'My Profile'},
   owner_id: String,
   location: {
     lat: String,
