@@ -22,7 +22,7 @@ dashboardRouter.post('/preferences', mAuth(), jsonParser, (req, res) => {
     config.name = req.body.name || null;
     config.owner_id = req.user._id;
     config.location = req.body.location;
-    config.modules = req.body.modules;
+    config.modules = req.body.modules || [];
   } catch(e) {
     return res.status(500).json({
       msg: 'There was an item missing'
