@@ -14,6 +14,23 @@ const mAuth = majorA.majorAuth;
 // Dashboard Router
 module.exports = exports = function(io) {
 
+  // Connection
+  io.on('connection', function(socket) {
+    // Join Room
+    socket.on('JOIN_ROOM', function(user_id) {
+      socket.join(user_id);
+      // Find user config
+      Config.findOne({
+        owner_id: user_id
+      }, (err, data) => {
+        if (err) return console.log('There was an erorr');
+        // Load user config
+        io.to(user_id).emit('UPDATED_CONFIG', data);
+      });
+    });
+  });
+
+  // Router
   var dashboardRouter = express.Router();
 
   // Create new config
@@ -94,10 +111,9 @@ module.exports = exports = function(io) {
             msg: 'There was an error'
           });
         }
-        //
-        
-        io.emit('UPDATED_CONFIG', updatedConfig);
-        
+
+        // Emit event
+        io.to(req.user._id).emit('UPDATED_CONFIG', updatedConfig);
 
         // Send response
         res.status(200).json(updateData);
