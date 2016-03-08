@@ -16,6 +16,7 @@ userFileSchema = mongoose.Schema({
     type: String,
     default: 'Hello, '
   },
+  config: Object,
   default_config: String,
   twitter_token: String,
   weather_token: String,
@@ -38,9 +39,29 @@ userFileSchema.methods.initialize = function() {
   });
 }
 
+// Populate config obj
+userFileSchema.methods.populateConfig = function() {
+  return new Promise((resolve, reject) => {
+    Config.findOne({
+      _id: this.default_config
+    }, (err, data) => {
+      if (err || !data) {
+        console.log('Error retreiving default');
+        reject(err);
+      }
+      // Store Data
+      this.config = data;
+
+      // Resolve promise with data
+      return resolve(this);
+    });
+  });
+}
+
 // Set default config
 userFileSchema.methods.setAsDefault = function(config_id) {
   this.default_config = config_id;
+  this.save();
 };
 
 module.exports = exports = mongoose.model('UserFile', userFileSchema);
