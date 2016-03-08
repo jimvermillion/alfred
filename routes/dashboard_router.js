@@ -4,9 +4,6 @@ const jsonParser = require('body-parser').json();
 // Config Model
 const Config = require(__dirname + '/../models/config');
 
-
-
-
 // Major A
 const majorA = require('major-a');
 const mAuth = majorA.majorAuth;
@@ -122,23 +119,47 @@ module.exports = exports = function(io) {
       })
     });
 
-  // Delete Config
-  dashboardRouter.delete('/preferences/:id', (req, res) => {
-    // Delete Prefenece Config
-    Config.remove({
-      _id: req.config.id
-    }, (err, data) => {
+dashboardRouter
+  .delete('/preferences/:id', mAuth(), jsonParser, (req, res) => {
+    var userID;
+    Config.find({_id: req.params.id}, (err, prefToDelete) => {
       if (err) return console.log(err);
-      if (!data) {
-        var data = new Config;
-        data.owner_id = req.user.id;
-        res.status(200).json({
-          msg: 'successfully deleted config'
+      userID = prefToDelete.owner_id;
+      // Delete Prefenece Config
+      Config.remove({
+        _id: req.params.id
+      }, (err, data) => {
+        // Check error
+        if (err) return console.log(err);
+        // Check if user has any other other prefs...if not we'll need to 
+        Config.find({owner_id: userID}, (err, data) => {
+          //another err check
+          if (err) return console.log(err);
+          // if there isn't any other prefs, make one
+          if (!data.length) {
+            //new config
+            var config = new Config;
+            config.owner_id = userID;
+            //save config in db
+            config.save((err, savedData) => {
+              // Check error
+              if (err) {
+                return res.status(500).json({
+                  msg: 'There was an error saving'
+                });
+              }
+              res.status(200).json({
+                msg: 'successfully deleted config'
+              });
+            });
+          } else {
+            res.status(200).json({
+              msg: 'successfully deleted config'
+            });
+          }
         });
-      }
+      });
     });
   });
-
-  // Return Router
   return dashboardRouter;
 }
