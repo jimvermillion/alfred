@@ -41,9 +41,9 @@ describe('config tests', () => {
       .set('token', this.token)
       .end((err, res) => {
         expect(err).to.eql(null);
-        expect(res.body).to.have.property('name');
-        expect(res.body).to.have.property('owner_id');
-        expect(res.body.name).to.eql('My Profile');
+        expect(res.body[0]).to.have.property('name');
+        expect(res.body[0]).to.have.property('owner_id');
+        expect(res.body[0].name).to.eql('My Profile');
         done();
     });
   });
