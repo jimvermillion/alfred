@@ -3,6 +3,7 @@ const jsonParser = require('body-parser').json();
 
 // Config Model
 const Config = require(__dirname + '/../models/config');
+const UserFile = require(__dirname + '/../models/userFile');
 
 // Major A
 const majorA = require('major-a');
@@ -11,22 +12,10 @@ const mAuth = majorA.majorAuth;
 // Dashboard Router
 module.exports = exports = function(io) {
 
-  // Connection
-  io.on('connection', function(socket) {
-    // Join Room
-    socket.on('JOIN_ROOM', function(user_id) {
-      socket.join(user_id);
-      // Find user config
-      Config.findOne({
-        owner_id: user_id
-      }, (err, data) => {
-        if (err) return console.log('There was an erorr');
-        // Load user config
-        data.user = req.user;
-        io.to(user_id).emit('UPDATED_CONFIG', data);
-      });
-    });
-  });
+  // Mirror Module Socket
+  const moduleSocket = require(__dirname + '/../lib/module-socket')(io);
+  // Socket Connection
+  io.on('connection', moduleSocket);
 
   // Router
   var dashboardRouter = express.Router();
@@ -72,19 +61,26 @@ module.exports = exports = function(io) {
       }
       // No config, create new config
       if (!data.length) {
-        var newConfig = new Config;
-        newConfig.owner_id = req.user._id;
+        var newUser = new UserFile();
+        newUser.owner_id = req.user._id;
         // Save Config
-        newConfig.save((savedConfigError, savedConfig) => {
+        newUser.save((savedUserFileError, savedUserFile) => {
           // Check Error
-          if (savedConfigError) {
+          if (savedUserFileError) {
             return res.status(500).json({
               msg: 'There was an error'
             });
           }
-          // Return new Config File
-          return res.status(200).json(savedConfig);
-        })
+          // Initialize New User -- SEE /models/userFile.js
+          savedUserFile.initialize()
+            .then(function(newConfig) {
+              // Return New Config File
+              return res.status(200).json([newConfig]);
+            }, function(err) {
+              return console.log('Promise reject');
+            });
+        });
+        // Config Files Exist
       } else {
         // Send back config file
         res.status(200).json(data);
@@ -119,47 +115,51 @@ module.exports = exports = function(io) {
       })
     });
 
-dashboardRouter
-  .delete('/preferences/:id', mAuth(), jsonParser, (req, res) => {
-    var userID;
-    Config.find({_id: req.params.id}, (err, prefToDelete) => {
-      if (err) return console.log(err);
-      userID = prefToDelete.owner_id;
-      // Delete Prefenece Config
-      Config.remove({
+  dashboardRouter
+    .delete('/preferences/:id', mAuth(), jsonParser, (req, res) => {
+      var userID;
+      Config.find({
         _id: req.params.id
-      }, (err, data) => {
-        // Check error
+      }, (err, prefToDelete) => {
         if (err) return console.log(err);
-        // Check if user has any other other prefs...if not we'll need to 
-        Config.find({owner_id: userID}, (err, data) => {
-          //another err check
+        userID = prefToDelete.owner_id;
+        // Delete Prefenece Config
+        Config.remove({
+          _id: req.params.id
+        }, (err, data) => {
+          // Check error
           if (err) return console.log(err);
-          // if there isn't any other prefs, make one
-          if (!data.length) {
-            //new config
-            var config = new Config;
-            config.owner_id = userID;
-            //save config in db
-            config.save((err, savedData) => {
-              // Check error
-              if (err) {
-                return res.status(500).json({
-                  msg: 'There was an error saving'
+          // Check if user has any other other prefs...if not we'll need to 
+          Config.find({
+            owner_id: userID
+          }, (err, data) => {
+            //another err check
+            if (err) return console.log(err);
+            // if there isn't any other prefs, make one
+            if (!data.length) {
+              //new config
+              var config = new Config;
+              config.owner_id = userID;
+              //save config in db
+              config.save((err, savedData) => {
+                // Check error
+                if (err) {
+                  return res.status(500).json({
+                    msg: 'There was an error saving'
+                  });
+                }
+                res.status(200).json({
+                  msg: 'successfully deleted config'
                 });
-              }
+              });
+            } else {
               res.status(200).json({
                 msg: 'successfully deleted config'
               });
-            });
-          } else {
-            res.status(200).json({
-              msg: 'successfully deleted config'
-            });
-          }
+            }
+          });
         });
       });
     });
-  });
   return dashboardRouter;
 }
