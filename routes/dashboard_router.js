@@ -88,6 +88,30 @@ module.exports = exports = function(io) {
     });
   });
 
+  // Load Config File
+  dashboardRouter.post('/preferences/setConfig/:id',
+    mAuth(), jsonParser, (req, res) => {
+      UserFile.findOne({
+        owner_id: req.user._id
+      }, (userFileErr, foundUserFile) => {
+        // Error
+        if (userFileErr) {
+          return res.status(500).json({
+            msg: 'There was an error'
+          });
+        }
+        // Set as default
+        foundUserFile.setAsDefault(req.params.id);
+        foundUserFile.populateConfig()
+          .then(function(res) {
+            // Push new file to display
+            io.to(req.user._id).emit('UPDATED_CONFIG', userFile);
+          });
+        // Send success to dashboard
+        res.status(200).json();
+      });
+    });
+
   // Update Config
   dashboardRouter
     .put('/preferences/:id', mAuth(), jsonParser, (req, res) => {
@@ -105,10 +129,6 @@ module.exports = exports = function(io) {
             msg: 'There was an error'
           });
         }
-
-        // Emit event
-        updatedConfig.user = req.user;
-        io.to(req.user._id).emit('UPDATED_CONFIG', updatedConfig);
 
         // Send response
         res.status(200).json(updateData);
@@ -161,5 +181,7 @@ module.exports = exports = function(io) {
         });
       });
     });
+
+  // Return Router
   return dashboardRouter;
 }
