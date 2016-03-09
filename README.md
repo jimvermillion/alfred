@@ -1,2 +1,3 @@
 # alfred
-Code Fellows 401 Project Week 2
+An IoT mirror built with JavaScript and Raspberry Pi.
+
