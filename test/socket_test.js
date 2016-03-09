@@ -7,27 +7,28 @@ const expect = chai.expect;
 const mongoose = require('mongoose');
 const request = chai.request;
 
-require('socket.io');
-
-// Socket
+// Get IO 
 const io = require(__dirname + '/../server');
-var socket;
-
+// Get socket
+require(__dirname + '/../lib/module-socket')(io);
+// Get client
+const clientSocket = require('socket.io-client');
 
 // Base URI
 const baseURI = 'http://localhost:8080';
 
-
 // Track vars
-var token, user, config;
+var token, user, config, client1;
 
-
+// Connect to Socket
 describe('The socket routes', (done) => {
-
+  // Create Client
   beforeEach((done) => {
-  	socket = require('socket.io-client')(baseURI);
-  	socket.on('connect', () => done());
-  })
+    client1 = clientSocket.connect(baseURI);
+    client1.on('connect', () => {
+      done();
+    })
+  });
   // Create Test User
   before((done) => {
     request(baseURI)
@@ -42,10 +43,10 @@ describe('The socket routes', (done) => {
         expect(err).to.eql(null);
         token = res.body.token;
         user = res.body.user;
-        console.log(user);
         done();
       });
   });
+
   // Get test UserProfile
   before((done) => {
     request('localhost:8080')
@@ -53,7 +54,6 @@ describe('The socket routes', (done) => {
       .set('token', token)
       .end((err, res) => {
         expect(err).to.eql(null);
-        console.log(res.body[0]);
         config = res.body[0];
         expect(res.body[0]).to.have.property('name');
         expect(res.body[0]).to.have.property('owner_id');
@@ -61,6 +61,7 @@ describe('The socket routes', (done) => {
         done();
       });
   });
+
   // Delete DB
   after((done) => {
     mongoose.connection.db.dropDatabase(() => {
@@ -68,27 +69,32 @@ describe('The socket routes', (done) => {
     });
   });
 
-  // EMIT UPDATED CONFIG
-  it('should emit an UPDATED_CONFIG event on POST', (done) => {
-    var client = io.connect(baseURI, options);
-
-
-    // Connect to client
-    client.on('connect', function(socket) {
-      socket.join(config.owner_id);
-      // Updated Config
-      socket.on('UPDATED_CONFIG', function(res) {
-        console.log(res);
-        done();
-      });
+  // JOIN_ROOM
+  it('should join a room on JOIN_ROOM', (done) => {
+    // Success
+    client1.on('ROOM_JOINED', function(id) {
+      expect(id).to.eql(user._id);
+      done();
     });
+    // Emit
+    client1.emit('JOIN_ROOM', user._id);
+  });
 
+  // UPDATED_CONFIG
+  it('should update the config on UPDATED_CONFIG', (done) => {
+    // Join Room
+    client1.emit('JOIN_ROOM', user._id);
+    // Success
+    client1.on('UPDATED_CONFIG', function(newConfig) {
+      expect(newConfig.owner_id).to.eql(user._id);
+      done();
+    });
+    // Make request
     request('localhost:8080')
       .post('/dashboard/config/setConfig/' + config._id)
       .set('token', token)
       .end((err, res) => {
         expect(err).to.eql(null);
-        // Socket should emit
       });
   });
 });
