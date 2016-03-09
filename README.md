@@ -1,2 +1,8 @@
 # alfred
-Code Fellows 401 Project Week 2
+An Internet-of-Things mirror built with JavaScript and Raspberry Pi.
+
+
+
+
+
+
