@@ -37,7 +37,7 @@ describe('config tests', () => {
 
   it('should check the config for our created by user -- GET', done => {
     request('localhost:8080')
-      .get('/dashboard/preferences')
+      .get('/dashboard/config')
       .set('token', this.token)
       .end((err, res) => {
         expect(err).to.eql(null);
@@ -50,7 +50,7 @@ describe('config tests', () => {
 
   it('should post a new config -- POST', done => {
     request(baseURI)
-      .post('/dashboard/preferences')
+      .post('/dashboard/config')
       .set('token', this.token)
       .send({ 
         name: 'bubba',
@@ -69,7 +69,7 @@ describe('config tests', () => {
 
   it('should put the pref edited by user -- PUT', done => {
     request(baseURI)
-      .put('/dashboard/preferences/' + this.pref._id)
+      .put('/dashboard/config/' + this.pref._id)
       .set('token', this.token)
       .send({ 
         name: 'tuba',
@@ -87,7 +87,7 @@ describe('config tests', () => {
 
   it('should delete the pref created by user -- DELETE', done => {
     request(baseURI)
-      .delete('/dashboard/preferences/' + this.pref._id)
+      .delete('/dashboard/config/' + this.pref._id)
       .set('token', this.token)
       .end((err, res) => {
         expect(err).to.eql(null);

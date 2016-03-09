@@ -35,6 +35,7 @@ module.exports = exports = function(io) {
         }
         // Set as default
         foundUserFile.setAsDefault(req.params.id);
+        // Populate default config
         foundUserFile.populateConfig()
           .then(function(res) {
             // Push new file to display
@@ -86,8 +87,6 @@ module.exports = exports = function(io) {
     });
   });
 
-
-
   // Create new config document
   dashboardRouter.post('/config', mAuth(), jsonParser, (req, res) => {
     // Save params from request body
@@ -118,7 +117,7 @@ module.exports = exports = function(io) {
 
   // Update Config File
   dashboardRouter
-    .put('/preferences/:id', mAuth(), jsonParser, (req, res) => {
+    .put('/config/:id', mAuth(), jsonParser, (req, res) => {
       // Update Prefenece Config
       var updatedConfig = req.body;
       // Remove Id as to not confuse mongo
@@ -141,7 +140,7 @@ module.exports = exports = function(io) {
 
   // Delete Config File
   dashboardRouter
-    .delete('/preferences/:id', mAuth(), jsonParser, (req, res) => {
+    .delete('/config/:id', mAuth(), jsonParser, (req, res) => {
       var userID;
       Config.find({
         _id: req.params.id
