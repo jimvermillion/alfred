@@ -1,3 +1,7 @@
 # alfred
-An IoT mirror built with JavaScript and Raspberry Pi.
+An Internet-of-Things mirror built with JavaScript and Raspberry Pi.
+
+###Routes
+Auth:
+
 
