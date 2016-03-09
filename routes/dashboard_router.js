@@ -14,41 +14,39 @@ module.exports = exports = function(io) {
 
   // Mirror Module Socket
   const moduleSocket = require(__dirname + '/../lib/module-socket')(io);
+  
   // Socket Connection
   io.on('connection', moduleSocket);
-
+ 
   // Router
   var dashboardRouter = express.Router();
 
-  // Create new config
-  dashboardRouter.post('/preferences', mAuth(), jsonParser, (req, res) => {
-    // Save params from request body
-    try {
-      var config = new Config;
-      config.name = req.body.name || null;
-      config.owner_id = req.user._id;
-      config.location = req.body.location;
-      config.modules = req.body.modules || [];
-    } catch (e) {
-      return res.status(500).json({
-        msg: 'There was an item missing'
+  // Send config file to display
+  dashboardRouter.post('/config/setConfig/:id',
+    mAuth(), jsonParser, (req, res) => {
+      UserFile.findOne({
+        owner_id: req.user._id
+      }, (userFileErr, foundUserFile) => {
+        // Error
+        if (userFileErr) {
+          return res.status(500).json({
+            msg: 'There was an error'
+          });
+        }
+        // Set as default
+        foundUserFile.setAsDefault(req.params.id);
+        foundUserFile.populateConfig()
+          .then(function(res) {
+            // Push new file to display
+            io.to(req.user._id).emit('UPDATED_CONFIG', userFile);
+          });
+        // Send success to dashboard
+        res.status(200).json();
       });
-    }
-    // Save document into DB
-    config.save((err, savedData) => {
-      // Check error
-      if (err) {
-        return res.status(500).json({
-          msg: 'There was an error saving'
-        });
-      }
-      // Return data
-      res.status(200).json(savedData);
     });
-  });
 
-  // Get user preferences
-  dashboardRouter.get('/preferences', mAuth(), (req, res) => {
+  // Get all user congfig files
+  dashboardRouter.get('/config', mAuth(), (req, res) => {
     // Check db for preferences
     Config.find({
       owner_id: req.user._id
@@ -88,31 +86,37 @@ module.exports = exports = function(io) {
     });
   });
 
-  // Load Config File
-  dashboardRouter.post('/preferences/setConfig/:id',
-    mAuth(), jsonParser, (req, res) => {
-      UserFile.findOne({
-        owner_id: req.user._id
-      }, (userFileErr, foundUserFile) => {
-        // Error
-        if (userFileErr) {
-          return res.status(500).json({
-            msg: 'There was an error'
-          });
-        }
-        // Set as default
-        foundUserFile.setAsDefault(req.params.id);
-        foundUserFile.populateConfig()
-          .then(function(res) {
-            // Push new file to display
-            io.to(req.user._id).emit('UPDATED_CONFIG', userFile);
-          });
-        // Send success to dashboard
-        res.status(200).json();
-      });
-    });
 
-  // Update Config
+
+  // Create new config document
+  dashboardRouter.post('/config', mAuth(), jsonParser, (req, res) => {
+    // Save params from request body
+    try {
+      var config = new Config;
+      config.name = req.body.name || null;
+      config.owner_id = req.user._id;
+      config.location = req.body.location;
+      config.modules = req.body.modules || [];
+    } catch (e) {
+      return res.status(500).json({
+        msg: 'There was an item missing'
+      });
+    }
+    // Save document into DB
+    config.save((err, savedData) => {
+      // Check error
+      if (err) {
+        return res.status(500).json({
+          msg: 'There was an error saving'
+        });
+      }
+      // Return data
+      res.status(200).json(savedData);
+    });
+  });
+
+
+  // Update Config File
   dashboardRouter
     .put('/preferences/:id', mAuth(), jsonParser, (req, res) => {
       // Update Prefenece Config
@@ -135,6 +139,7 @@ module.exports = exports = function(io) {
       })
     });
 
+  // Delete Config File
   dashboardRouter
     .delete('/preferences/:id', mAuth(), jsonParser, (req, res) => {
       var userID;
