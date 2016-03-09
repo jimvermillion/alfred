@@ -13,7 +13,7 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
 // Connect to Mongo Instance
-mongoose.connect(db.url);
+mongoose.connect(process.env.MONGO_URI || db.url);
 
 // CORS
 app.use((req, res, next) => {
