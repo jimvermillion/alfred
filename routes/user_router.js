@@ -9,7 +9,6 @@ const majorA = require('major-a');
 const mAuth = majorA.majorAuth;
 
 module.exports = exports = function(io) {
-
   const userRouter = express.Router();
 
   // Update User Profile

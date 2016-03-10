@@ -2,16 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const db = require(__dirname + '/lib/db');
 
-
-
 // CONST
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT || 8080;
 const app = express();
 const http = require('http').Server(app);
 
-
 const io = require('socket.io')(http);
-
 
 // Connect to Mongo Instance
 mongoose.connect(process.env.MONGO_URI || db.url);
@@ -30,11 +26,9 @@ const majorA = require('major-a');
 const majorRouter = majorA.majorRouter;
 app.use('/auth', majorRouter);
 
-
 // Dashboard Router
 const dashboardRouter = require(__dirname + '/routes/dashboard_router')(io);
 app.use('/dashboard', dashboardRouter);
-
 
 // User Router
 const userRouter = require(__dirname + '/routes/user_router')(io);
@@ -42,7 +36,7 @@ app.use('/user', userRouter);
 
 // Listen
 http.listen(PORT, () => {
-	console.log('Server live on port ', PORT);
+  console.log('Server live on port ', PORT);
 });
 
 module.exports = exports = io;

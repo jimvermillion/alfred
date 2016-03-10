@@ -76,6 +76,7 @@ module.exports = exports = function(io) {
               // Return New Config File
               return res.status(200).json([newConfig]);
             }, function(err) {
+              console.log(err);
               return console.log('Promise reject');
             });
         });
