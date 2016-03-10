@@ -10,7 +10,7 @@ It is recommended to use the deployed version of this app so you don't have to c
 Git clone this repo and install all dependencies:
 ```
 git clone https://github.com/alfred-mirror/alfred-display.git
-cd alfred-display
+cd alfred
 npm install
 ```
 
