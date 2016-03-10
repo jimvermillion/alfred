@@ -6,8 +6,7 @@ const Config = require(__dirname + '/../models/config');
 const UserFile = require(__dirname + '/../models/userFile');
 
 // Major A
-const majorA = require('major-a');
-const mAuth = majorA.majorAuth;
+const mAuth = require('major-a').majorAuth;
 
 // Dashboard Router
 module.exports = exports = function(io) {
