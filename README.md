@@ -25,13 +25,6 @@ Then start the server. Make sure both the client dashboard and the mirror displa
 node server.js
 ```
 
-### Acknowledgements & Modules Used
-- [body-parser](https://www.npmjs.com/package/body-parser)
-- [express](https://www.npmjs.com/package/express)
-- [major-a](https://www.npmjs.com/package/major-a)
-- [mongoose](https://www.npmjs.com/package/mongoose)
-- [socket.io](https://www.npmjs.com/package/socket.io)
-
 ### Issues? Suggestions? Comments?
 Submit an issue on [GitHub](https://github.com/alfred-mirror/alfred-display/issues).
 
