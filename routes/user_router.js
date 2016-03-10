@@ -9,7 +9,6 @@ const majorA = require('major-a');
 const mAuth = majorA.majorAuth;
 
 module.exports = exports = function(io) {
-
   const userRouter = express.Router();
 
   // Update User Profile
@@ -34,10 +33,9 @@ module.exports = exports = function(io) {
 
       // Send back new file
       res.status(200).json(foundUserFile);
-
     });
   });
 
   // Return router
   return userRouter;
-}
+};

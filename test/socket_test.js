@@ -7,7 +7,7 @@ const expect = chai.expect;
 const mongoose = require('mongoose');
 const request = chai.request;
 
-// Get IO 
+// Get IO
 const io = require(__dirname + '/../server');
 // Get socket
 require(__dirname + '/../lib/module-socket')(io);
@@ -27,7 +27,7 @@ describe('The socket routes', (done) => {
     client1 = clientSocket.connect(baseURI);
     client1.on('connect', () => {
       done();
-    })
+    });
   });
   // Create Test User
   before((done) => {
