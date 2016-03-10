@@ -12,14 +12,9 @@ userFileSchema = mongoose.Schema({
     first: String,
     last: String
   },
-  greeting: {
-    type: String,
-    default: 'Hello, '
-  },
   config: Object,
   default_config: String,
-  twitter_token: String,
-  weather_token: String,
+  weather_token: String
 });
 
 // Initialize

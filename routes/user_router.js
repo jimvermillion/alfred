@@ -17,6 +17,7 @@ module.exports = exports = function(io) {
   // Update User Profile
   userRouter.put('/update/:id', mAuth(), jsonParser, (req, res) => {
     console.log('hit');
+    console.log(req.body);
     // Find File
     UserFile.update({
       owner_id: req.params.id
