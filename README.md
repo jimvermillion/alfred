@@ -20,10 +20,12 @@ mkdir db
 mongod --dbpath=./db --smallfiles
 ```
 
-Then start the server. Make sure both the client dashboard and the mirror display's servers are also running. The entire app should be now working on the client dashboard's specified port or defaults to ```localhost:3000```.
+Then start the server.
 ```
 node server.js
 ```
+
+Make sure both the client dashboard and the mirror display's servers are also running. The entire app should be now working on the client dashboard's specified port or defaults to ```localhost:3000```.
 
 ### Issues? Suggestions? Comments?
 Submit an issue on [GitHub](https://github.com/alfred-mirror/alfred/issues).
