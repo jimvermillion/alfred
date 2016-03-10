@@ -8,15 +8,12 @@ const UserFile = require(__dirname + '/../models/userFile');
 const majorA = require('major-a');
 const mAuth = majorA.majorAuth;
 
-
-
 module.exports = exports = function(io) {
 
   const userRouter = express.Router();
 
   // Update User Profile
   userRouter.put('/update/:id', mAuth(), jsonParser, (req, res) => {
-    console.log('hit');
     // Find File
     UserFile.update({
       owner_id: req.params.id
