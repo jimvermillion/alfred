@@ -10,6 +10,8 @@ const request = chai.request;
 
 const baseURI = 'localhost:8080';
 
+var newConfig;
+
 describe('config tests', () => {
   before( done => {
     // signup user and collect the token
@@ -35,6 +37,7 @@ describe('config tests', () => {
     });
   });
 
+    // Get config
   it('should check the config for our created by user -- GET', done => {
     request('localhost:8080')
       .get('/dashboard/config')
@@ -48,6 +51,7 @@ describe('config tests', () => {
     });
   });
 
+   // Create new config
   it('should post a new config -- POST', done => {
     request(baseURI)
       .post('/dashboard/config')
@@ -60,6 +64,7 @@ describe('config tests', () => {
        })
       .end((err, res) => {
         this.pref = res.body;
+        newConfig = res.body._id;
         expect(err).to.eql(null);
         expect(res.body).to.have.property('name');
         expect(res.body.name).to.eql('bubba');
@@ -67,6 +72,18 @@ describe('config tests', () => {
     });
   });
 
+  // Update default config
+  it('should change the default config -- POST', (done) => {
+
+    request('localhost:8080')
+    .post('/dashboard/config/setConfig/' + newConfig)
+    .set('token', this.token)
+    .end((err, res) => {
+      expect(err).to.eql(null);
+      done();
+    });
+  });
+  // Edit Config
   it('should put the pref edited by user -- PUT', done => {
     request(baseURI)
       .put('/dashboard/config/' + this.pref._id)
@@ -84,7 +101,7 @@ describe('config tests', () => {
         done();
     });
   });
-
+  // Delete Config
   it('should delete the pref created by user -- DELETE', done => {
     request(baseURI)
       .delete('/dashboard/config/' + this.pref._id)
