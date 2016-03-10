@@ -15,7 +15,7 @@ module.exports = exports = function(io) {
   const userRouter = express.Router();
 
   // Update User Profile
-  userRouter.put('/update', mAuth(), jsonParser, (req, res) => {
+  userRouter.put('/update/:id', mAuth(), jsonParser, (req, res) => {
     // Find File
     UserFile.update({
       owner_id: req.user._id
