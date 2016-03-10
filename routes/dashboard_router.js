@@ -37,9 +37,9 @@ module.exports = exports = function(io) {
         foundUserFile.setAsDefault(req.params.id);
         // Populate default config
         foundUserFile.populateConfig()
-          .then(function(res) {
+          .then(function(newData) {
             // Push new file to display
-            io.to(req.user._id).emit('UPDATED_CONFIG', userFile);
+            io.to(req.user._id).emit('UPDATED_CONFIG', newData);
           });
         // Send success to dashboard
         res.status(200).json();

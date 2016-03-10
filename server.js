@@ -35,6 +35,11 @@ app.use('/auth', majorRouter);
 const dashboardRouter = require(__dirname + '/routes/dashboard_router')(io);
 app.use('/dashboard', dashboardRouter);
 
+
+// User Router
+const userRouter = require(__dirname + '/routes/user_router')(io);
+app.use('/user', userRouter);
+
 // Listen
 http.listen(PORT, () => {
 	console.log('Server live on port ', PORT);
