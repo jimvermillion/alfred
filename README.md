@@ -26,7 +26,7 @@ node server.js
 ```
 
 ### Issues? Suggestions? Comments?
-Submit an issue on [GitHub](https://github.com/alfred-mirror/alfred.git/issues).
+Submit an issue on [GitHub](https://github.com/alfred-mirror/alfred/issues).
 
 ### License
-MIT Licensed. For more details, see the [LICENSE](https://github.com/alfred-mirror/alfred.git/blob/master/LICENSE.md) file.
+MIT Licensed. For more details, see the [LICENSE](https://github.com/alfred-mirror/alfred/blob/master/LICENSE.md) file.
