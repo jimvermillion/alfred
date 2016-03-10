@@ -80,19 +80,53 @@ describe('The socket routes', (done) => {
     client1.emit('JOIN_ROOM', user._id);
   });
 
-  // UPDATED_CONFIG
-  it('should update the config on UPDATED_CONFIG', (done) => {
+  // UPDATED_CONFIG ON MODULE CHANGE
+  it('should update the CONFIG on UPDATED_CONFIG', (done) => {
+    var notCalled = true;
     // Join Room
     client1.emit('JOIN_ROOM', user._id);
     // Success
     client1.on('UPDATED_CONFIG', function(newConfig) {
       expect(newConfig.owner_id).to.eql(user._id);
-      done();
+      if (notCalled)
+        done();
+      notCalled = !notCalled;
     });
     // Make request
     request('localhost:8080')
       .post('/dashboard/config/setConfig/' + config._id)
       .set('token', token)
+      .end((err, res) => {
+        expect(err).to.eql(null);
+      });
+  });
+
+  // UPDATE_CONFIG ON USER PROFILE CHANGE
+  it('should update the USER on UPDATED_CONFIG', () => {
+    var notCalled = true;
+    // Join room
+    client1.emit('JOIN_ROOM', user._id);
+    // Listen for evetn
+    client1.on('UPDATED_CONFIG', function(newConfig) {
+      expect(newConfig.owner_id).to.eql(user._id);
+      expect(newConfig.name.first).to.eql('Sam');
+      expect(newConfig.name.last).to.eql('Heutmaker');
+      // Ensure done is only called once.
+      if (notCalled) {
+        done();
+        notCalled = !notCalled;
+      }
+    });
+    // Make request
+    request('localhost:8080')
+      .put('/user/update/' + user._id)
+      .set('token', token)
+      .send({
+        name: {
+          first: "Sam",
+          last: "Heutmaker"
+        }
+      })
       .end((err, res) => {
         expect(err).to.eql(null);
       });

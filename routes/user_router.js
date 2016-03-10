@@ -15,16 +15,17 @@ module.exports = exports = function(io) {
   const userRouter = express.Router();
 
   // Update User Profile
-  userRouter.put('/update', mAuth(), jsonParser, (req, res) => {
+  userRouter.put('/update/:id', mAuth(), jsonParser, (req, res) => {
+    console.log('hit');
     // Find File
     UserFile.update({
-      owner_id: req.user._id
+      owner_id: req.params.id
     }, req.body, (err, foundUserFile) => {
       // Check error
       if (err || !foundUserFile) {
         return res.status(500).json({
           msg: 'User Not Found.'
-        })
+        });
       }
 
       // Populate default config
@@ -37,7 +38,7 @@ module.exports = exports = function(io) {
       // Send back new file
       res.status(200).json(foundUserFile);
 
-    })
+    });
   });
 
   // Return router
