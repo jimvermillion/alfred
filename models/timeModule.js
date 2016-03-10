@@ -7,7 +7,7 @@ var timeModuleSchema = new mongoose.Schema({
     twentyFour: { type: Boolean, default: false },
     // day display format (true: Sunday, false: Sun)
     dayLong: { type: Boolean, default: true },
-    // month display format (true: March, flase: Mar)
+    // month display format (true: March, false: Mar)
     monthLong: { type: Boolean, default: true }
   }
 });

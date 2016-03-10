@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 
 const Config = require(__dirname + '/config.js');
 
-
 userFileSchema = mongoose.Schema({
   owner_id: {
     type: String,
@@ -14,6 +13,7 @@ userFileSchema = mongoose.Schema({
   },
   config: Object,
   default_config: String,
+  twitter_token: String,
   weather_token: String
 });
 
@@ -32,7 +32,7 @@ userFileSchema.methods.initialize = function() {
       return resolve(savedConfig);
     });
   });
-}
+};
 
 // Populate config obj
 userFileSchema.methods.populateConfig = function() {
@@ -51,7 +51,7 @@ userFileSchema.methods.populateConfig = function() {
       return resolve(this);
     });
   });
-}
+};
 
 // Set default config
 userFileSchema.methods.setAsDefault = function(config_id) {

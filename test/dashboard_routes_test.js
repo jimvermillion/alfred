@@ -13,7 +13,7 @@ const baseURI = 'localhost:8080';
 var newConfig;
 
 describe('config tests', () => {
-  before( done => {
+  before(done => {
     // signup user and collect the token
     request(baseURI)
       .post('/auth/register')
@@ -29,7 +29,7 @@ describe('config tests', () => {
         this.token = res.body.token;
         done();
       });
-    });
+  });
 
   after((done) => {
     mongoose.connection.db.dropDatabase(() => {
@@ -48,7 +48,7 @@ describe('config tests', () => {
         expect(res.body[0]).to.have.property('owner_id');
         expect(res.body[0].name).to.eql('My Profile');
         done();
-    });
+      });
   });
 
    // Create new config
@@ -56,12 +56,12 @@ describe('config tests', () => {
     request(baseURI)
       .post('/dashboard/config')
       .set('token', this.token)
-      .send({ 
+      .send({
         name: 'bubba',
         owner_id: 'id',
         location: {lat: 5, long: 6},
         modules: ['hey', 'dude']
-       })
+      })
       .end((err, res) => {
         this.pref = res.body;
         newConfig = res.body._id;
@@ -69,12 +69,11 @@ describe('config tests', () => {
         expect(res.body).to.have.property('name');
         expect(res.body.name).to.eql('bubba');
         done();
-    });
+      });
   });
 
   // Update default config
   it('should change the default config -- POST', (done) => {
-
     request('localhost:8080')
     .post('/dashboard/config/setConfig/' + newConfig)
     .set('token', this.token)
@@ -88,18 +87,18 @@ describe('config tests', () => {
     request(baseURI)
       .put('/dashboard/config/' + this.pref._id)
       .set('token', this.token)
-      .send({ 
+      .send({
         name: 'tuba',
         owner_id: 'di',
         location: {lat: 6, long: 5},
         modules: ['dude', 'hey']
-       })
+      })
       .end((err, res) => {
         expect(err).to.eql(null);
         expect(res.body).to.have.property('ok');
         expect(res.body.nModified).to.eql(1);
         done();
-    });
+      });
   });
   // Delete Config
   it('should delete the pref created by user -- DELETE', done => {
@@ -111,6 +110,6 @@ describe('config tests', () => {
         expect(res.body).to.have.property('msg');
         expect(res.body.msg).to.eql('successfully deleted config');
         done();
-    });
+      });
   });
 });

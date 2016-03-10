@@ -6,18 +6,17 @@ const Config = require(__dirname + '/../models/config');
 const UserFile = require(__dirname + '/../models/userFile');
 
 // Major A
-const majorA = require('major-a');
-const mAuth = majorA.majorAuth;
+const mAuth = require('major-a').majorAuth;
 
 // Dashboard Router
 module.exports = exports = function(io) {
 
   // Mirror Module Socket
   const moduleSocket = require(__dirname + '/../lib/module-socket')(io);
-  
+
   // Socket Connection
   io.on('connection', moduleSocket);
- 
+
   // Router
   var dashboardRouter = express.Router();
 
@@ -76,6 +75,7 @@ module.exports = exports = function(io) {
               // Return New Config File
               return res.status(200).json([newConfig]);
             }, function(err) {
+              console.log(err);
               return console.log('Promise reject');
             });
         });
@@ -114,7 +114,6 @@ module.exports = exports = function(io) {
     });
   });
 
-
   // Update Config File
   dashboardRouter
     .put('/config/:id', mAuth(), jsonParser, (req, res) => {
@@ -135,7 +134,7 @@ module.exports = exports = function(io) {
 
         // Send response
         res.status(200).json(updateData);
-      })
+      });
     });
 
   // Delete Config File
@@ -153,18 +152,18 @@ module.exports = exports = function(io) {
         }, (err, data) => {
           // Check error
           if (err) return console.log(err);
-          // Check if user has any other other prefs...if not we'll need to 
+          // Check if user has any other other prefs...if not we'll need to
           Config.find({
             owner_id: userID
           }, (err, data) => {
-            //another err check
+            // another err check
             if (err) return console.log(err);
             // if there isn't any other prefs, make one
             if (!data.length) {
-              //new config
+              // new config
               var config = new Config;
               config.owner_id = userID;
-              //save config in db
+              // save config in db
               config.save((err, savedData) => {
                 // Check error
                 if (err) {
@@ -188,4 +187,4 @@ module.exports = exports = function(io) {
 
   // Return Router
   return dashboardRouter;
-}
+};
