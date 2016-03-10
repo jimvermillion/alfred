@@ -9,7 +9,7 @@ It is recommended to use the deployed version of this app so you don't have to c
 
 Git clone this repo and install all dependencies:
 ```
-git clone https://github.com/alfred-mirror/alfred-display.git
+git clone https://github.com/alfred-mirror/alfred.git
 cd alfred
 npm install
 ```
@@ -26,7 +26,7 @@ node server.js
 ```
 
 ### Issues? Suggestions? Comments?
-Submit an issue on [GitHub](https://github.com/alfred-mirror/alfred-display/issues).
+Submit an issue on [GitHub](https://github.com/alfred-mirror/alfred.git/issues).
 
 ### License
-MIT Licensed. For more details, see the [LICENSE](https://github.com/alfred-mirror/alfred-display/blob/master/LICENSE.md) file.
+MIT Licensed. For more details, see the [LICENSE](https://github.com/alfred-mirror/alfred.git/blob/master/LICENSE.md) file.
