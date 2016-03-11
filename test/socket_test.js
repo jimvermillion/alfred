@@ -12,23 +12,24 @@ const io = require(__dirname + '/../server');
 // Get socket
 require(__dirname + '/../lib/module-socket')(io);
 // Get client
-const clientSocket = require('socket.io-client');
+const clientIO = require('socket.io-client');
 
 // Base URI
 const baseURI = 'http://localhost:8080';
 
 // Track vars
-var token, user, config, client1;
+var token, user, config, clientSocket;
 
 // Connect to Socket
 describe('The socket routes', (done) => {
   // Create Client
   beforeEach((done) => {
-    client1 = clientSocket.connect(baseURI);
-    client1.on('connect', () => {
+    clientSocket = clientIO.connect(baseURI);
+    clientSocket.on('connect', () => {
       done();
     });
   });
+
   // Create Test User
   before((done) => {
     request(baseURI)
@@ -65,28 +66,28 @@ describe('The socket routes', (done) => {
   // Delete DB
   after((done) => {
     mongoose.connection.db.dropDatabase(() => {
-      done(); //eslint-disable-line
+      mongoose.disconnect(done);
     });
   });
 
   // JOIN_ROOM
   it('should join a room on JOIN_ROOM', (done) => {
     // Success
-    client1.on('ROOM_JOINED', function(id) {
+    clientSocket.on('ROOM_JOINED', (id) => {
       expect(id).to.eql(user._id);
       done();
     });
     // Emit
-    client1.emit('JOIN_ROOM', user._id);
+    clientSocket.emit('JOIN_ROOM', user._id);
   });
 
   // UPDATED_CONFIG ON MODULE CHANGE
   it('should update the CONFIG on UPDATED_CONFIG', (done) => {
     var notCalled = true;
     // Join Room
-    client1.emit('JOIN_ROOM', user._id);
+    clientSocket.emit('JOIN_ROOM', user._id);
     // Success
-    client1.on('UPDATED_CONFIG', function(newConfig) {
+    clientSocket.on('UPDATED_CONFIG', (newConfig) => {
       expect(newConfig.owner_id).to.eql(user._id);
       if (notCalled)
         done();
@@ -105,9 +106,9 @@ describe('The socket routes', (done) => {
   it('should update the USER on UPDATED_CONFIG', (done) => {
     var notCalled = true;
     // Join room
-    client1.emit('JOIN_ROOM', user._id);
+    clientSocket.emit('JOIN_ROOM', user._id);
     // Listen for evetn
-    client1.on('UPDATED_CONFIG', function(newConfig) {
+    clientSocket.on('UPDATED_CONFIG', (newConfig) => {
       expect(newConfig.owner_id).to.eql(user._id);
       expect(newConfig.name.first).to.eql('Sam');
       expect(newConfig.name.last).to.eql('Heutmaker');
@@ -123,8 +124,8 @@ describe('The socket routes', (done) => {
       .set('token', token)
       .send({
         name: {
-          first: "Sam",
-          last: "Heutmaker"
+          first: 'Sam',
+          last: 'Heutmaker'
         }
       })
       .end((err, res) => {
