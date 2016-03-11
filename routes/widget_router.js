@@ -53,8 +53,14 @@ widgetRouter.post('/new', mAuth(), jsonParser, (req, res) => {
     var newWidget = new Widget();
     newWidget.owner_id = req.user._id;
     newWidget.type = req.body.type;
-    newWidget.options = req.body.options;
+    newWidget.name = req.body.name;
+
+    if(Object.keys(req.body.options).length > 0) {
+      newWidget.options = req.body.options;
+    }
+
     newWidget.save((err, savedWidget) => {
+      
       // Errors
       if (err) return handleError.dbError(err, res);
       if (!savedWidget) return handleError.noData('Could not create', res);
