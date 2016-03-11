@@ -24,7 +24,7 @@ module.exports = exports = function(io) {
 
       // Respond with data
       res.status(200).json(data);
-    })
+    });
   });
 
   // Update User Profile

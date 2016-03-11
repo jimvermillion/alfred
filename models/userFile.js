@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const Config = require(__dirname + '/config.js');
 
-userFileSchema = mongoose.Schema({
+var userFileSchema = mongoose.Schema({
   owner_id: {
     type: String,
     required: true
@@ -44,7 +44,7 @@ userFileSchema.methods.populateConfig = function() {
       if (err || !data) {
         console.log('Error retreiving default');
         reject(err);
-      } 
+      }
 
       // Populate Modules
       data.populateModules().then((widgetsArray) => {

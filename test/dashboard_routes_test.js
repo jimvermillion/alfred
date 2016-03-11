@@ -18,9 +18,9 @@ describe('config tests', () => {
     request(baseURI)
       .post('/auth/register')
       .send({
-        "authentication": {
-          "email": "testuser@test.com",
-          "password": "testpassword"
+        'authentication': {
+          'email': 'testuser@test.com',
+          'password': 'testpassword'
         }
       })
       .end((err, res) => {

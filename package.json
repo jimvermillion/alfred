@@ -25,11 +25,26 @@
     "smart"
   ],
   "author": [
-    { "name": "Natalie Chow", "email": "cychownat@gmail.com" },
-    { "name": "Sam Heutmaker", "email": "samheutmaker@gmail.com" },
-    { "name": "Sabrina Tee", "email": "sabrinatee@me.com" },
-    { "name": "Jose Tello", "email": "josectello@gmail.com" },
-    { "name": "James Vermillion", "email": "jamesvermillion@yahoo.com" }
+    {
+      "name": "Natalie Chow",
+      "email": "cychownat@gmail.com"
+    },
+    {
+      "name": "Sam Heutmaker",
+      "email": "samheutmaker@gmail.com"
+    },
+    {
+      "name": "Sabrina Tee",
+      "email": "sabrinatee@me.com"
+    },
+    {
+      "name": "Jose Tello",
+      "email": "josectello@gmail.com"
+    },
+    {
+      "name": "James Vermillion",
+      "email": "jamesvermillion@yahoo.com"
+    }
   ],
   "license": "MIT",
   "bugs": {
@@ -46,6 +61,8 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-http": "^2.0.1",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^2.0.0",
     "gulp-mocha": "^2.2.0",
     "mocha": "^2.4.5",
     "socket.io-client": "^1.4.5"

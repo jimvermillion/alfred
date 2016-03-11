@@ -34,9 +34,9 @@ describe('The socket routes', (done) => {
     request(baseURI)
       .post('/auth/register')
       .send({
-        "authentication": {
-          "email": "testone@test.com",
-          "password": "testpassword"
+        'authentication': {
+          'email': 'testone@test.com',
+          'password': 'testpassword'
         }
       })
       .end((err, res) => {
@@ -102,7 +102,7 @@ describe('The socket routes', (done) => {
   });
 
   // UPDATE_CONFIG ON USER PROFILE CHANGE
-  it('should update the USER on UPDATED_CONFIG', () => {
+  it('should update the USER on UPDATED_CONFIG', (done) => {
     var notCalled = true;
     // Join room
     client1.emit('JOIN_ROOM', user._id);
