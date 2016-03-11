@@ -25,10 +25,8 @@ var configSchema = new mongoose.Schema({
   modules: Array
 });
 
-
 // Populate modules array with Widgets
 configSchema.methods.populateModules = function() {
-
   var holder = [];
   return new Promise((resolve, reject) => {
     this.modules.forEach((mod, index) => {
@@ -38,17 +36,13 @@ configSchema.methods.populateModules = function() {
       }, (err, data) => {
         if (err) return reject(err);
 
-        // Assign
-        holder[index] = (data) ? data : {type: 'someshit'};
+        // Assign to corresponding position in holder
+        holder[index] = (data) ? data : {type: ''};
 
-        if (index === this.modules.length - 1) {
-
-          resolve(holder);
-          
-        }
-      })
-    })
+        if (index === this.modules.length - 1) return resolve(holder);
+      });
+    });
   });
-}
+};
 
 module.exports = exports = mongoose.model('Config', configSchema);
