@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 var widgetSchema = new mongoose.Schema({
+  name: {type: String, required: true},
   owner_id: {type: String, required: true},
   type: {
     type: String,
