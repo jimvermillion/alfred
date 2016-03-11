@@ -150,7 +150,7 @@ module.exports = exports = function(io) {
         // Delete Prefenece Config
         Config.remove({
           _id: req.params.id
-        }, (err, data) => {
+        }, (err) => {
           // Check error
           if (err) return console.log(err);
           // Check if user has any other other prefs...if not we'll need to
@@ -165,7 +165,7 @@ module.exports = exports = function(io) {
               var config = new Config;
               config.owner_id = userID;
               // save config in db
-              config.save((err, savedData) => {
+              config.save((err) => {
                 // Check error
                 if (err) {
                   return res.status(500).json({
