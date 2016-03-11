@@ -41,15 +41,19 @@ userFileSchema.methods.populateConfig = function() {
     Config.findOne({
       _id: this.default_config
     }, (err, data) => {
+      // Error
       if (err || !data) {
         console.log('Error retreiving default');
         reject(err);
-      }
-      // Store Data
-      this.config = data;
+      } 
 
-      // Resolve promise with data
-      return resolve(this);
+      // Populate Modules
+      data.populateModules().then((widgetsArray) => {
+        data.modules = widgetsArray;
+        this.config = data;
+        // Resolve promise with data
+        return resolve(this);
+      });
     });
   });
 }
